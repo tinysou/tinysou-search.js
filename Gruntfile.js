@@ -9,12 +9,12 @@ module.exports = function(grunt) {
       dist: {
         src: ['src/jquery-2.1.1.js', 'src/jquery.modal.js', 'src/hogan-3.0.1.js',
         'src/jquery.hashchange.js', 'src/tinysou.js'],
-        dest: 'build/tinysou.js'
+        dest: 'build/tinysou.org.js'
       }
     },
     uglify: {
       build: {
-        src: 'build/tinysou.js',
+        src: 'build/tinysou.org.js',
         dest: 'build/tinysou.min.js'
       }
     },
