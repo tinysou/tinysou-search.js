@@ -10201,7 +10201,9 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
   var ident = 0;
 
   window.TinySou = window.TinySou || {};
-  TinySou.root_url = TinySou.root_url || 'https://api.swiftype.com';
+  TinySou.root_url = TinySou.root_url || 'http://api.tinysou.com';
+
+  // Functions used to track result click event
   TinySou.pingUrl = function(endpoint, callback) {
     var to = setTimeout(callback, 350);
     var img = new Image();
@@ -10219,7 +10221,7 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
       doc_id: docId,
       q: TinySou.currentQuery
     };
-    var url = TinySou.root_url + '/api/v1/public/analytics/pc?' + $.param(params);
+    var url = TinySou.root_url + '/v1/public/analytics/pc?' + $.param(params);
     TinySou.pingUrl(url, callback);
   };
 
@@ -10230,7 +10232,7 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
       doc_id: docId,
       prefix: value
     };
-    var url = TinySou.root_url + '/api/v1/public/analytics/pas?' + $.param(params);
+    var url = TinySou.root_url + '/v1/public/analytics/pas?' + $.param(params);
     TinySou.pingUrl(url, callback);
   };
 
@@ -10277,7 +10279,7 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
         };
       };
 
-      $this.selectedAtcCallback = function(data) {
+      $this.selectedActCallback = function(data) {
         return function() {
           var value = $this.val(),
             callback = function() {
@@ -10294,7 +10296,7 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
 
       $this.registerActResult = function($element, data) {
         $element.data('tinysou-item', data);
-        $element.click($this.selectedAtcCallback(data)).mouseover(function () {
+        $element.click($this.selectedActCallback(data)).mouseover(function () {
           $this.listResults().removeClass(config.activeItemClass);
           $element.addClass(config.activeItemClass);
         });
@@ -10386,15 +10388,15 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
           config.renderStyle = 'inline';
         }
       } else {
-        $('body').append("<div id='st-results-container' style='display: none;'></div>");
-        $resultContainer = $('#st-results-container');
+        $('body').append("<div id='ts-results-container' style='display: none;'></div>");
+        $resultContainer = $('#ts-results-container');
       }
       var initialContentOfResultContainer = $resultContainer.html(),
-        contentCacheId = 'st-content-cache',
+        contentCacheId = 'ts-content-cache',
         $contentCache = $this.getContentCache();
 
       var setSearchHash = function (query, page) {
-          location.hash = "stq=" + encodeURIComponent(query) + "&stp=" + page;
+          location.hash = "tsq=" + encodeURIComponent(query) + "&tsp=" + page;
         };
 
       var submitSearch = function (query, options) {
@@ -10430,20 +10432,19 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
           params['fetch_fields'] = handleFunctionParam(config.fetchFields);
           params['facets'] = handleFunctionParam(config.facets);
           params['filters'] = handleFunctionParam(config.filters);
-          params['document_types'] = handleFunctionParam(config.documentTypes);
+          params['c'] = handleFunctionParam(config.collection);
           params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
-          params['sort_field'] = handleFunctionParam(config.sortField);
-          params['sort_direction'] = handleFunctionParam(config.sortDirection);
+          params['sort'] = handleFunctionParam(config.sort);
           params['spelling'] = handleFunctionParam(config.spelling);
 
-          $.getJSON(TinySou.root_url + "/api/v1/public/engines/search.json?callback=?", params).success(renderSearchResults);
+          $.getJSON(TinySou.root_url + "/v1/public/engines/search?callback=?", params).success(renderSearchResults);
         };
 
       $(window).hashchange(function () {
         var params = $.hashParams();
-        if (params.stq) {
-          submitSearch(params.stq, {
-            page: params.stp
+        if (params.tsq) {
+          submitSearch(params.tsq, {
+            page: params.tsp
           });
         } else {
           var $contentCache = $this.getContentCache();
@@ -10466,7 +10467,7 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
       $(document).on('click', '[data-hash][data-page]', function (e) {
         e.preventDefault();
         var $this = $(this);
-        setSearchHash($.hashParams().stq, $this.data('page'));
+        setSearchHash($.hashParams().tsq, $this.data('page'));
       });
 
       $(document).on('click', '[data-hash][data-spelling-suggestion]', function (e) {
@@ -10545,7 +10546,7 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
         case 13:
           if (($active.length !== 0) && ($list.is(':visible'))) {
             event.preventDefault();
-            $this.selectedAtcCallback($active.data('tinysou-item'))();
+            $this.selectedActCallback($active.data('tinysou-item'))();
           } else if ($this.currentRequest) {
             $this.submitting();
           }
@@ -10615,18 +10616,20 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
   };
 
   var renderPagination = function (ctx, resultInfo) {
-    var maxPagesType, maxPages = -1,
-      config = ctx.config;
-    $.each(resultInfo, function(documentType, typeInfo) {
-      if (typeInfo.num_pages > maxPages) {
-        maxPagesType = documentType;
-        maxPages = typeInfo.num_pages;
-      }
-    });
-    var currentPage = resultInfo[maxPagesType].current_page,
-      totalPages = resultInfo[maxPagesType].num_pages;
-
-    $(config.renderPaginationForType(maxPagesType, currentPage, totalPages)).appendTo(ctx.resultContainer);
+    var pages = '<div class="ts-page">',
+        previousPage, nextPage, currentPage, totalPages;
+    currentPage = resultInfo['page'];
+    totalPages = resultInfo['total']
+    if (currentPage != 1) {
+      previousPage = currentPage - 1;
+      pages = pages + '<a href="#" class="ts-prev" data-hash="true" data-page="' + previousPage + '">&laquo; previous</a>';
+    }
+    if (currentPage < totalPages) {
+      nextPage = currentPage + 1;
+      pages = pages + '<a href="#" class="ts-next" data-hash="true" data-page="' + nextPage + '">next &raquo;</a>';
+    }
+    pages += '</div>';
+    $(pages).appendTo(ctx.resultContainer);
   };
 
 
@@ -10649,13 +10652,12 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
     params['search_fields'] = handleFunctionParam(config.searchFields);
     params['fetch_fields'] = handleFunctionParam(config.fetchFields);
     params['filters'] = handleFunctionParam(config.filters);
-    params['document_types'] = handleFunctionParam(config.documentTypes);
+    params['collection'] = handleFunctionParam(config.collection);
     params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
-    params['sort_field'] = handleFunctionParam(config.sortField);
-    params['sort_direction'] = handleFunctionParam(config.sortDirection);
+    params['sort'] = handleFunctionParam(config.sort);
     params['per_page'] = config.resultLimit;
 
-    var endpoint = TinySou.root_url + '/api/v1/public/engines/suggest.json';
+    var endpoint = TinySou.root_url + '/v1/public/engines/autocomplete';
     $this.currentRequest = $.ajax({
       type: 'GET',
       dataType: 'jsonp',
@@ -10731,82 +10733,63 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
 
     $resultContainer.html('');
 
-    $.each(data.records, function (documentType, items) {
-      $.each(items, function (idx, item) {
-        ctx.registerResult($(config.renderFunction(documentType, item)).appendTo($resultContainer), item);
-      });
+    $.each(data.records, function (idx, item) {
+      ctx.registerResult($(config.renderFunction(item)).appendTo($resultContainer), item);
     });
 
     renderPagination(ctx, data.info);
     if (!config.renderStyle) {
-      $('#st-results-container').appendTo('body').modal();
+      $('#ts-results-container').appendTo('body').modal();
     } else if (config.renderStyle == 'new_page') {
       var url = config.resultPageURL + window.location.hash;
       window.location.replace(url);
       config.renderStyle = 'inline';
-      config.resultContainingElement = '#st-results-container';
+      config.resultContainingElement = '#ts-results-container';
     }
   };
 
-  var defaultRenderFunction = function (document_type, item) {
-      return '<div class="st-result"><h3 class="title"><a href="' + item['url'] + '" class="st-search-result-link">' + htmlEscape(item['title']) + '</a></h3></div>';
+  var defaultRenderFunction = function (item) {
+      return '<div class="ts-result"><h3 class="title"><a href="' + item['url'] + '" class="ts-search-result-link">' + htmlEscape(item['title']) + '</a></h3></div>';
     };
 
   var defaultLoadingFunction = function(query, $resultContainer) {
-      $resultContainer.html('<p class="st-loading-message">loading...</p>');
+      $resultContainer.html('<p class="ts-loading-message">loading...</p>');
     };
 
   var defaultPostRenderFunction = function(data) {
-    var totalResultCount = 0;
+    var info = data.info
+    var total = 0;
+    var max_score = 0.0;
     var $resultContainer = this.getContext().resultContainer;
     var spellingSuggestion = null;
 
-    if (data['info']) {
-      $.each(data['info'], function(index, value) {
-        totalResultCount += value['total_result_count'];
-        if ( value['spelling_suggestion'] ) {
-          spellingSuggestion = value['spelling_suggestion']['text'];
-        }
-
-      });
+    if (info) {
+      total = info['total'];
+      max_score = info['max_score']
+      if (info['spelling_suggestion']) {
+        spellingSuggestion = info['spelling_suggestion']['text'];
+      }
     }
 
-    if (totalResultCount === 0) {
-      $resultContainer.html("<div id='st-no-results' class='st-no-results'>No results found.</div>");
+    if (total === 0) {
+      $resultContainer.html("<div id='ts-no-results' class='ts-no-results'>没有找到结果.</div>");
     }
 
     if (spellingSuggestion !== null) {
-      $resultContainer.append('<div class="st-spelling-suggestion">Did you mean <a href="#" data-hash="true" data-spelling-suggestion="' + spellingSuggestion + '">' + spellingSuggestion + '</a>?</div>');
+      $resultContainer.append('<div class="ts-spelling-suggestion">你是不是在找 <a href="#" data-hash="true" data-spelling-suggestion="' + spellingSuggestion + '">' + spellingSuggestion + '</a>?</div>');
     }
   };
-
-  var defaultRenderPaginationForType = function (type, currentPage, totalPages) {
-      var pages = '<div class="st-page">',
-        previousPage, nextPage;
-      if (currentPage != 1) {
-        previousPage = currentPage - 1;
-        pages = pages + '<a href="#" class="st-prev" data-hash="true" data-page="' + previousPage + '">&laquo; previous</a>';
-      }
-      if (currentPage < totalPages) {
-        nextPage = currentPage + 1;
-        pages = pages + '<a href="#" class="st-next" data-hash="true" data-page="' + nextPage + '">next &raquo;</a>';
-      }
-      pages += '</div>';
-      return pages;
-    };
 
   var defaultRenderActResultsFunction = function(ctx, results) {
     var $list = ctx.list,
       config = ctx.config;
 
-    $.each(results, function(document_type, items) {
-      $.each(items, function(idx, item) {
-        ctx.registerActResult($('<li>' + config.renderActFunction(document_type, item) + '</li>').appendTo($list), item);
-      });
+    $.each(results, function(idx, item) {
+      ctx.registerActResult($('<li>' + config.renderActFunction(item) + '</li>').appendTo($list), item);
     });
   };
 
-  var defaultRenderActFunction = function(document_type, item) {
+  var defaultRenderActFunction = function(item) {
     return '<p class="title">' + TinySou.htmlEscape(item['title']) + '</p>';
   };
 
@@ -10940,15 +10923,13 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
   }
   $.fn.tinysouSearch.defaults = {
     attachTo: undefined,
-    documentTypes: undefined,
-    facets: undefined,
-    filters: undefined,
+    collection: 'page',
+    // filters: undefined,
     engineKey: undefined,
     searchFields: undefined,
     functionalBoosts: undefined,
-    sortField: undefined,
-    sortDirection: undefined,
-    fetchFields: undefined,
+    sort: undefined,
+    fetchFields: ['title', 'url'],
     renderStyle: undefined,
     resultPageURL: undefined,
     resultContainingElement: undefined,
@@ -10957,7 +10938,6 @@ timeout_id=setTimeout(poll,$.fn[str_hashchange].delay);};window.attachEvent&&!wi
     loadingFunction: defaultLoadingFunction,
     renderResultsFunction: defaultRenderResultsFunction,
     renderFunction: defaultRenderFunction,
-    renderPaginationForType: defaultRenderPaginationForType,
     perPage: 10,
     spelling: 'strict',
     //autocomplete
