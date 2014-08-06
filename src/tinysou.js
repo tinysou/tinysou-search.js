@@ -95,7 +95,7 @@
         return function (e) {
           var $el = $(this);
           e.preventDefault();
-          TinySou.pingSearchResultClick(config.engineKey, data['id'], function() {
+          TinySou.pingSearchResultClick(config.engineKey, data['document']['id'], function() {
             window.location = $el.attr('href');
           });
         };
@@ -107,7 +107,7 @@
             callback = function() {
               config.onComplete(data, value);
             };
-          TinySou.pingAutoSelection(config.engineKey, data['id'], value, callback);
+          TinySou.pingAutoSelection(config.engineKey, data['document']['id'], value, callback);
         };
       };
 
@@ -223,7 +223,7 @@
 
       var submitSearch = function (query, options) {
           options = $.extend({
-            page: 1
+            page: 0
           }, options);
           var params = {};
 
@@ -259,7 +259,7 @@
           params['sort'] = handleFunctionParam(config.sort);
           params['spelling'] = handleFunctionParam(config.spelling);
 
-          $.getJSON(TinySou.root_url + "/v1/public/engines/search?callback=?", params).success(renderSearchResults);
+          $.getJSON(TinySou.root_url + "/v1/public/search?callback=?", params).success(renderSearchResults);
         };
 
       $(window).hashchange(function () {
@@ -282,7 +282,7 @@
         $containingForm.bind('submit', function (e) {
           e.preventDefault();
           var searchQuery = $this.val();
-          setSearchHash(searchQuery, 1);
+          setSearchHash(searchQuery, 0);
         });
       }
 
@@ -474,12 +474,12 @@
     params['search_fields'] = handleFunctionParam(config.searchFields);
     params['fetch_fields'] = handleFunctionParam(config.fetchFields);
     params['filters'] = handleFunctionParam(config.filters);
-    params['collection'] = handleFunctionParam(config.collection);
+    params['c'] = handleFunctionParam(config.collection);
     params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
     params['sort'] = handleFunctionParam(config.sort);
     params['per_page'] = config.resultLimit;
 
-    var endpoint = TinySou.root_url + '/v1/public/engines/autocomplete';
+    var endpoint = TinySou.root_url + '/v1/public/autocomplete';
     $this.currentRequest = $.ajax({
       type: 'GET',
       dataType: 'jsonp',
@@ -571,7 +571,7 @@
   };
 
   var defaultRenderFunction = function (item) {
-      return '<div class="ts-result"><h3 class="title"><a href="' + item['url'] + '" class="ts-search-result-link">' + htmlEscape(item['title']) + '</a></h3></div>';
+      return '<div class="ts-result"><h3 class="title"><a href="' + item['document']['url'] + '" class="ts-search-result-link">' + htmlEscape(item['document']['title']) + '</a></h3></div>';
     };
 
   var defaultLoadingFunction = function(query, $resultContainer) {
@@ -612,11 +612,11 @@
   };
 
   var defaultRenderActFunction = function(item) {
-    return '<p class="title">' + TinySou.htmlEscape(item['title']) + '</p>';
+    return '<p class="title">' + TinySou.htmlEscape(item['document']['title']) + '</p>';
   };
 
   var defaultOnComplete = function(item, prefix) {
-    window.location = item['url'];
+    window.location = item['document']['url'];
   };
 
   var defaultDropdownStylesFunction = function($this) {
