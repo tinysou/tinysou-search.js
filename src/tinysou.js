@@ -487,7 +487,7 @@
       data: params
     }).success(function(data) {
       var norm = normalize(term);
-      if (data.record_count > 0) {
+      if (data.info.total > 0) {
         $this.cache.put(norm, data.records);
       } else {
         $this.addEmpty(norm);
