@@ -219,6 +219,7 @@
 
       var setSearchHash = function (query, page) {
           location.hash = "tsq=" + encodeURIComponent(query) + "&tsp=" + page;
+          $(window).hashchange();
         };
 
       var submitSearch = function (query, options) {
