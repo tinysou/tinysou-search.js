@@ -295,7 +295,7 @@
       $(document).on('click', '[data-hash][data-spelling-suggestion]', function (e) {
         e.preventDefault();
         var $this = $(this);
-        setSearchHash($this.data('spelling-suggestion'), 1);
+        setSearchHash($this.data('spelling-suggestion'), 0);
       });
 
       var renderSearchResults = function (data) {
