@@ -82,6 +82,7 @@ div.ts-result .ts-date {
 .modal {
   display: none;
   width: 800px;
+  overflow: scroll;
   background: #fff;
   padding: 15px 30px;
   -webkit-border-radius: 8px;

@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['src/jquery-2.1.1.js', 'src/jquery.modal.js', 'src/hogan-3.0.1.js',
+        src: ['src/jquery.modal.js', 'src/hogan-3.0.1.js',
         'src/jquery.hashchange.js', 'src/tinysou.js'],
         dest: 'build/tinysou.org.js'
       }
