@@ -99,8 +99,8 @@ div.ts-result .ts-date {
 
 .modal a.close-modal {
   position: absolute;
-  top: -12.5px;
-  right: -12.5px;
+  top: -0.5px;
+  right: -0.5px;
   display: block;
   width: 30px;
   height: 30px;
