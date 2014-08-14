@@ -442,7 +442,7 @@
     var pages = '<div class="ts-page">',
         previousPage, nextPage, currentPage, totalPages;
     currentPage = resultInfo['page'];
-    totalPages = resultInfo['total']
+    totalPages = ((resultInfo['total'] - 1) / config.perPage);
     if (currentPage != 0) {
       previousPage = currentPage - 1;
       pages = pages + '<a href="#" class="ts-prev" data-hash="true" data-page="' + previousPage + '">&laquo; previous</a>';
