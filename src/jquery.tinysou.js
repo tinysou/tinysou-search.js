@@ -443,7 +443,7 @@
         previousPage, nextPage, currentPage, totalPages;
     currentPage = resultInfo['page'];
     totalPages = resultInfo['total']
-    if (currentPage != 1) {
+    if (currentPage != 0) {
       previousPage = currentPage - 1;
       pages = pages + '<a href="#" class="ts-prev" data-hash="true" data-page="' + previousPage + '">&laquo; previous</a>';
     }
