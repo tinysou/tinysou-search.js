@@ -771,7 +771,7 @@
     renderActResultsFunction: defaultRenderActResultsFunction,
     renderActFunction: defaultRenderActFunction,
     dropdownStylesFunction: defaultDropdownStylesFunction,
-    resultLimit: undefined,
+    resultLimit: 5,
     suggestionListType: 'ul',
     suggestionListClass: 'autocomplete',
     resultListSelector: 'li',
