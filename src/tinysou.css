@@ -81,7 +81,7 @@ div.ts-result .ts-date {
 /*modal*/
 .modal {
   display: none;
-  width: 800px;
+  width: 80%;
   max-height: 95%;
   overflow-y: scroll;
   background: #fff;
