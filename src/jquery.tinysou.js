@@ -442,7 +442,7 @@
     var pages = '<div class="ts-page">',
         previousPage, nextPage, currentPage, totalPages;
     currentPage = resultInfo['page'];
-    totalPages = ((resultInfo['total'] - 1) / config.perPage);
+    totalPages = ((resultInfo['total'] - 1) / ctx.config.perPage);
     if (currentPage != 0) {
       previousPage = currentPage - 1;
       pages = pages + '<a href="#" class="ts-prev" data-hash="true" data-page="' + previousPage + '">&laquo; previous</a>';
@@ -572,7 +572,13 @@
   };
 
   var defaultRenderFunction = function (item) {
-      return '<div class="ts-result"><h3 class="title"><a href="' + item['document']['url'] + '" class="ts-search-result-link">' + htmlEscape(item['document']['title']) + '</a></h3></div>';
+      var resultTemplate = Hogan.compile('<div class="ts-result"><h3 class="title"><a href="{{url}}" class="ts-search-result-link">{{title}}</a></h3><div class="ts-metadata"><span class="ts-snippet">{{{body}}}</span></div></div>');
+      var data = {
+        title: item['document']['title'],
+        url: item['document']['url'],
+        body: (item.highlight && item.highlight['body']) || item['document']['sections'].join(',')
+      };
+      return resultTemplate.render(data);
     };
 
   var defaultLoadingFunction = function(query, $resultContainer) {
@@ -752,7 +758,7 @@
     searchFields: undefined,
     functionalBoosts: undefined,
     sort: undefined,
-    fetchFields: ['title', 'url'],
+    fetchFields: ['title', 'url', 'sections'],
     renderStyle: undefined,
     resultPageURL: undefined,
     resultContainingElement: undefined,
