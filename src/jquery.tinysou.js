@@ -334,9 +334,9 @@
 
       var styles = config.dropdownStylesFunction($this);
       var $tinysouWidget = $('<div class="tinysou-widget" />');
-      var $listContainer = $('<div />').addClass(config.suggestionListClass).appendTo($tinysouWidget).css(styles).hide();
+      var $listContainer = $('<div />').addClass(config.autocompleteListClass).appendTo($tinysouWidget).css(styles).hide();
       $tinysouWidget.appendTo(config.autocompleteContainingElement);
-      var $list = $('<' + config.suggestionListType + ' />').appendTo($listContainer);
+      var $list = $('<' + config.autocompleteListType + ' />').appendTo($listContainer);
 
       $this.data('tinysou-list', $list);
       var typingDelayPointer;
@@ -778,8 +778,8 @@
     renderActFunction: defaultRenderActFunction,
     dropdownStylesFunction: defaultDropdownStylesFunction,
     resultLimit: 5,
-    suggestionListType: 'ul',
-    suggestionListClass: 'autocomplete',
+    autocompleteListType: 'ul',
+    autocompleteListClass: 'autocomplete',
     resultListSelector: 'li',
     setWidth: true,
     typingDelay: 80,
