@@ -36,10 +36,11 @@
     img.src = endpoint;
     return false;
   };
-  TinySou.pingSearchResultClick = function (engineKey, docId, callback) {
+  TinySou.pingSearchResultClick = function (engineKey, collection, docId, callback) {
     var params = {
       t: new Date().getTime(),
       engine_key: engineKey,
+      c: collection,
       doc_id: docId,
       q: TinySou.currentQuery
     };
@@ -47,10 +48,11 @@
     TinySou.pingUrl(url, callback);
   };
 
-  TinySou.pingAutoSelection = function(engineKey, docId, value, callback) {
+  TinySou.pingAutoSelection = function(engineKey, collection, docId, value, callback) {
     var params = {
       t: new Date().getTime(),
       engine_key: engineKey,
+      c: collection,
       doc_id: docId,
       prefix: value
     };
@@ -95,7 +97,7 @@
         return function (e) {
           var $el = $(this);
           e.preventDefault();
-          TinySou.pingSearchResultClick(config.engineKey, data['document']['id'], function() {
+          TinySou.pingSearchResultClick(config.engineKey, data['collection'], data['document']['id'], function() {
             window.location = $el.attr('href');
           });
         };
@@ -107,7 +109,7 @@
             callback = function() {
               config.onComplete(data, value);
             };
-          TinySou.pingAutoSelection(config.engineKey, data['document']['id'], value, callback);
+          TinySou.pingAutoSelection(config.engineKey, data['collection'], data['document']['id'], value, callback);
         };
       };
 
