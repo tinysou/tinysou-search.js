@@ -447,11 +447,11 @@
     totalPages = ((resultInfo['total'] - 1) / ctx.config.perPage);
     if (currentPage != 0) {
       previousPage = currentPage - 1;
-      pages = pages + '<a href="#" class="ts-prev" data-hash="true" data-page="' + previousPage + '">&laquo; previous</a>';
+      pages = pages + '<a href="#" class="ts-prev" data-hash="true" data-page="' + previousPage + '">&laquo; 上一页</a>';
     }
     if (currentPage < totalPages) {
       nextPage = currentPage + 1;
-      pages = pages + '<a href="#" class="ts-next" data-hash="true" data-page="' + nextPage + '">next &raquo;</a>';
+      pages = pages + '<a href="#" class="ts-next" data-hash="true" data-page="' + nextPage + '">下一页 &raquo;</a>';
     }
     pages += '</div>';
     $(pages).appendTo(ctx.resultContainer);
