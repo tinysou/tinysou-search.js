@@ -98,7 +98,7 @@ div.ts-result .ts-date {
   box-shadow: 0 0 10px #000;
 }
 
-.ts-modal a.close-modal {
+.ts-modal .close-ts-modal {
   position: absolute;
   top: -0.5px;
   right: -0.5px;

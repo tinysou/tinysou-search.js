@@ -6,11 +6,11 @@
 
   var current = null;
 
-  $.modal = function(el, options) {
-    $.modal.close(); // Close any open modals.
+  $.ts_modal = function(el, options) {
+    $.ts_modal.close(); // Close any open modals.
     var remove, target;
     this.$body = $('body');
-    this.options = $.extend({}, $.modal.defaults, options);
+    this.options = $.extend({}, $.ts_modal.defaults, options);
     this.options.doFade = !isNaN(parseInt(this.options.fadeDuration, 10));
     if (el.is('a')) {
       target = el.attr('href');
@@ -25,18 +25,18 @@
         this.$body.append(this.$elm);
         remove = function(event, modal) { modal.elm.remove(); };
         this.showSpinner();
-        el.trigger($.modal.AJAX_SEND);
+        el.trigger($.ts_modal.AJAX_SEND);
         $.get(target).done(function(html) {
           if (!current) return;
-          el.trigger($.modal.AJAX_SUCCESS);
-          current.$elm.empty().append(html).on($.modal.CLOSE, remove);
+          el.trigger($.ts_modal.AJAX_SUCCESS);
+          current.$elm.empty().append(html).on($.ts_modal.CLOSE, remove);
           current.hideSpinner();
           current.open();
-          el.trigger($.modal.AJAX_COMPLETE);
+          el.trigger($.ts_modal.AJAX_COMPLETE);
         }).fail(function() {
-          el.trigger($.modal.AJAX_FAIL);
+          el.trigger($.ts_modal.AJAX_FAIL);
           current.hideSpinner();
-          el.trigger($.modal.AJAX_COMPLETE);
+          el.trigger($.ts_modal.AJAX_COMPLETE);
         });
       }
     } else {
@@ -45,8 +45,8 @@
     }
   };
 
-  $.modal.prototype = {
-    constructor: $.modal,
+  $.ts_modal.prototype = {
+    constructor: $.ts_modal,
 
     open: function() {
       var m = this;
@@ -60,23 +60,23 @@
         this.show();
       }
       if (this.options.escapeClose) {
-        $(document).on('keydown.modal', function(event) {
-          if (event.which == 27) $.modal.close();
+        $(document).on('keydown.ts_modal', function(event) {
+          if (event.which == 27) $.ts_modal.close();
         });
       }
-      if (this.options.clickClose) this.blocker.click($.modal.close);
+      if (this.options.clickClose) this.blocker.click($.ts_modal.close);
     },
 
     close: function() {
       this.unblock();
       this.hide();
-      $(document).off('keydown.modal');
+      $(document).off('keydown.ts_modal');
     },
 
     block: function() {
       var initialOpacity = this.options.doFade ? 0 : this.options.opacity;
-      this.$elm.trigger($.modal.BEFORE_BLOCK, [this._ctx()]);
-      this.blocker = $('<div class="jquery-modal blocker"></div>').css({
+      this.$elm.trigger($.ts_modal.BEFORE_BLOCK, [this._ctx()]);
+      this.blocker = $('<div class="jquery-ts-modal blocker"></div>').css({
         top: 0, right: 0, bottom: 0, left: 0,
         width: "100%", height: "100%",
         position: "fixed",
@@ -88,7 +88,7 @@
       if(this.options.doFade) {
         this.blocker.animate({opacity: this.options.opacity}, this.options.fadeDuration);
       }
-      this.$elm.trigger($.modal.BLOCK, [this._ctx()]);
+      this.$elm.trigger($.ts_modal.BLOCK, [this._ctx()]);
     },
 
     unblock: function() {
@@ -102,9 +102,9 @@
     },
 
     show: function() {
-      this.$elm.trigger($.modal.BEFORE_OPEN, [this._ctx()]);
+      this.$elm.trigger($.ts_modal.BEFORE_OPEN, [this._ctx()]);
       if (this.options.showClose) {
-        this.closeButton = $('<a href="#close-modal" rel="modal:close" class="close-modal ' + this.options.closeClass + '">' + this.options.closeText + '</a>');
+        this.closeButton = $('<a href="#close-ts-modal" rel="ts_modal:close" class="close-ts-modal ' + this.options.closeClass + '">' + this.options.closeText + '</a>');
         this.$elm.append(this.closeButton);
       }
       this.$elm.addClass(this.options.modalClass + ' current');
@@ -114,11 +114,11 @@
       } else {
         this.$elm.show();
       }
-      this.$elm.trigger($.modal.OPEN, [this._ctx()]);
+      this.$elm.trigger($.ts_modal.OPEN, [this._ctx()]);
     },
 
     hide: function() {
-      this.$elm.trigger($.modal.BEFORE_CLOSE, [this._ctx()]);
+      this.$elm.trigger($.ts_modal.BEFORE_CLOSE, [this._ctx()]);
       if (this.closeButton) this.closeButton.remove();
       this.$elm.removeClass('current');
 
@@ -127,7 +127,7 @@
       } else {
         this.$elm.hide();
       }
-      this.$elm.trigger($.modal.CLOSE, [this._ctx()]);
+      this.$elm.trigger($.ts_modal.CLOSE, [this._ctx()]);
     },
 
     showSpinner: function() {
@@ -160,9 +160,9 @@
   };
 
   //resize is alias for center for now
-  $.modal.prototype.resize = $.modal.prototype.center;
+  $.ts_modal.prototype.resize = $.ts_modal.prototype.center;
 
-  $.modal.close = function(event) {
+  $.ts_modal.close = function(event) {
     if (!current) return;
     if (event) event.preventDefault();
     current.close();
@@ -171,17 +171,17 @@
     return that;
   };
 
-  $.modal.resize = function() {
+  $.ts_modal.resize = function() {
     if (!current) return;
     current.resize();
   };
 
   // Returns if there currently is an active modal
-  $.modal.isActive = function () {
+  $.ts_modal.isActive = function () {
     return current ? true : false;
-  }
+  };
 
-  $.modal.defaults = {
+  $.ts_modal.defaults = {
     overlay: "#000",
     opacity: 0.75,
     zIndex: 1,
@@ -189,7 +189,7 @@
     clickClose: true,
     closeText: 'Close',
     closeClass: '',
-    modalClass: "modal",
+    modalClass: "ts-modal",
     spinnerHtml: null,
     showSpinner: true,
     showClose: true,
@@ -198,28 +198,28 @@
   };
 
   // Event constants
-  $.modal.BEFORE_BLOCK = 'modal:before-block';
-  $.modal.BLOCK = 'modal:block';
-  $.modal.BEFORE_OPEN = 'modal:before-open';
-  $.modal.OPEN = 'modal:open';
-  $.modal.BEFORE_CLOSE = 'modal:before-close';
-  $.modal.CLOSE = 'modal:close';
-  $.modal.AJAX_SEND = 'modal:ajax:send';
-  $.modal.AJAX_SUCCESS = 'modal:ajax:success';
-  $.modal.AJAX_FAIL = 'modal:ajax:fail';
-  $.modal.AJAX_COMPLETE = 'modal:ajax:complete';
+  $.ts_modal.BEFORE_BLOCK = 'ts_modal:before-block';
+  $.ts_modal.BLOCK = 'ts_modal:block';
+  $.ts_modal.BEFORE_OPEN = 'ts_modal:before-open';
+  $.ts_modal.OPEN = 'ts_modal:open';
+  $.ts_modal.BEFORE_CLOSE = 'ts_modal:before-close';
+  $.ts_modal.CLOSE = 'ts_modal:close';
+  $.ts_modal.AJAX_SEND = 'ts_modal:ajax:send';
+  $.ts_modal.AJAX_SUCCESS = 'ts_modal:ajax:success';
+  $.ts_modal.AJAX_FAIL = 'ts_modal:ajax:fail';
+  $.ts_modal.AJAX_COMPLETE = 'ts_modal:ajax:complete';
 
-  $.fn.modal = function(options){
+  $.fn.ts_modal = function(options){
     if (this.length === 1) {
-      current = new $.modal(this, options);
+      current = new $.ts_modal(this, options);
     }
     return this;
   };
 
   // Automatically bind links with rel="modal:close" to, well, close the modal.
-  $(document).on('click.modal', 'a[rel="modal:close"]', $.modal.close);
-  $(document).on('click.modal', 'a[rel="modal:open"]', function(event) {
+  $(document).on('click.ts_modal', 'a[rel="ts_modal:close"]', $.ts_modal.close);
+  $(document).on('click.ts_modal', 'a[rel="ts_modal:open"]', function(event) {
     event.preventDefault();
-    $(this).modal();
+    $(this).ts_modal();
   });
 })(jQuery);
