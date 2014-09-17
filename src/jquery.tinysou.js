@@ -564,7 +564,7 @@
 
     renderPagination(ctx, data.info);
     if (!config.renderStyle) {
-      $('#ts-results-container').appendTo('body').ts_modal(({zIndex: 9999});
+      $('#ts-results-container').appendTo('body').ts_modal({zIndex: 9999});
     } else if (config.renderStyle == 'new_page') {
       var url = config.resultPageURL + window.location.hash;
       window.location.replace(url);
