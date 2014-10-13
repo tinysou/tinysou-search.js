@@ -574,13 +574,11 @@
   };
 
   var defaultRenderFunction = function (item) {
-      var resultTemplate = Hogan.compile('<div class="ts-result"><h3 class="title"><a href="{{url}}" class="ts-search-result-link">{{title}}</a></h3><div class="ts-metadata"><span class="ts-snippet">{{{body}}}</span></div></div>');
-      var data = {
-        title: item['document']['title'],
-        url: item['document']['url'],
-        body: (item.highlight && item.highlight['body']) || item['document']['sections'].join(',')
-      };
-      return resultTemplate.render(data);
+      var title = item['document']['title'];
+      var url = item['document']['url'];
+      var body = (item.highlight && item.highlight['body']) || item['document']['sections'].join(',');
+      var results ='<div class="ts-result"><h3 class="title"><a href='+ url + ' class="ts-search-result-link">' + title + '</a></h3><div class="ts-metadata"><span class="ts-snippet">' + body + '</span></div></div>';
+      return results;
     };
 
   var defaultLoadingFunction = function(query, $resultContainer) {
@@ -588,7 +586,7 @@
     };
 
   var defaultPostRenderFunction = function(data) {
-    var info = data.info
+    var info = data.info;
     var total = 0;
     var max_score = 0.0;
     var $resultContainer = this.getContext().resultContainer;

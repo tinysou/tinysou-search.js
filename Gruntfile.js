@@ -9,11 +9,11 @@ module.exports = function(grunt) {
         }
       },
       all: {
-        src: [ 'deps/jquery-2.1.1.js', 'deps/jquery.hashchange.js', 'deps/jquery.modal.js',  'deps/hogan-3.0.1.js', 'src/jquery.tinysou.js'],
+        src: [ 'deps/jquery-2.1.1.js', 'deps/jquery.hashchange.js', 'deps/jquery.modal.js', 'src/jquery.tinysou.js'],
         dest: 'build/tinysou-all.js'
       },
       nojquery: {
-        src: ['deps/jquery.hashchange.js', 'deps/jquery.modal.js', 'deps/hogan-3.0.1.js', 'src/jquery.tinysou.js',],
+        src: ['deps/jquery.hashchange.js', 'deps/jquery.modal.js', 'src/jquery.tinysou.js',],
         dest: 'build/tinysou-nojquery.js'
       },
       bare: {
