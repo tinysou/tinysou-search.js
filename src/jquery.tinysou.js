@@ -65,14 +65,16 @@
     if (!sectionText) { return; }
 
     function normalizeText(str) {
-      var out = str.replace(/\s+/g, '');
-      out = out.toLowerCase();
-      return out;
+      // var out = str.replace(/\s+/g, '');
+      // out = out.toLowerCase();
+      // return out;
+      return str.replace(/\s+/g, '').toLowerCase();
     }
 
     sectionText = normalizeText(sectionText);
 
     $('h1, h2, h3, h4, h5, h6').each(function(idx) {
+      // no 'var'
       $this = $(this);
       if (normalizeText($this.text()).indexOf(sectionText) >= 0) {
         this.scrollIntoView(true);
@@ -159,7 +161,7 @@
       };
 
       $this.activeResult = function() {
-        return $this.listResults().filter('.' + config.activeItemClass).first();
+        return $this.listResults().filter('.' + config.activeItemClass).eq(0);
       };
 
       $this.prevResult = function() {
@@ -243,14 +245,15 @@
           params['per_page'] = config.perPage;
 
           function handleFunctionParam(field) {
-            if (field !== undefined) {
-              var evald = field;
-              if (typeof evald === 'function') {
-                evald = evald.call();
-              }
-              return evald;
-            }
-            return undefined;
+            // if (field !== undefined) {
+            //   var evald = field;
+            //   if (typeof evald === 'function') {
+            //     evald = evald.call();
+            //   }
+            //   return evald;
+            // }
+            // return undefined;
+            return typeof field === 'function' ? field() : field;
           }
 
           params['search_fields'] = handleFunctionParam(config.searchFields);
@@ -293,9 +296,7 @@
         e.preventDefault();
         var $this = $(this);
         setSearchHash($.hashParams().tsq, $this.data('page'));
-      });
-
-      $(document).on('click', '[data-hash][data-spelling-suggestion]', function (e) {
+      }).on('click', '[data-hash][data-spelling-suggestion]', function (e) {
         e.preventDefault();
         var $this = $(this);
         setSearchHash($this.data('spelling-suggestion'), 0);
@@ -381,7 +382,7 @@
         case 38:
           event.preventDefault();
           if ($active.length === 0) {
-            $this.listResults().last().addClass(config.activeItemClass);
+            $this.listResults().eq(-1).addClass(config.activeItemClass);
           } else {
             $this.prevResult();
           }
@@ -389,8 +390,8 @@
         case 40:
           event.preventDefault();
           if ($active.length === 0) {
-            $this.listResults().first().addClass(config.activeItemClass);
-          } else if ($active != $this.listResults().last()) {
+            $this.listResults().eq(0).addClass(config.activeItemClass);
+          } else if ($active != $this.listResults().eq(-1)) {
             $this.nextResult();
           }
           break;
@@ -405,6 +406,9 @@
       });
 
       // opera wants keypress rather than keydown to prevent the form submit
+      // so bind keypress event for opera-only should be better(?)
+      // http://browserhacks.com/#op
+      // (!!window.opera || /opera|opr/i.test(navigator.userAgent)) &&
       $this.keypress(function (event) {
         if ((event.which == 13) && ($this.activeResult().length > 0)) {
           event.preventDefault();
@@ -415,8 +419,7 @@
       var blurWait = false;
       $(document).bind('mousedown.tinysou' + ++ident, function () {
         mouseDown = true;
-      });
-      $(document).bind('mouseup.tinysou' + ident, function () {
+      }).bind('mouseup.tinysou' + ident, function () {
         mouseDown = false;
         if (blurWait) {
           blurWait = false;
@@ -523,7 +526,7 @@
         return;
       }
       $this.lastValue = term;
-      if ($.trim(term) === '') {
+      if (!$.trim(term)) {
         $this.data('tinysou-list').empty();
         $this.hideList();
         return;
@@ -577,8 +580,7 @@
       var title = item['document']['title'];
       var url = item['document']['url'];
       var body = (item.highlight && item.highlight['body']) || item['document']['sections'].join(',');
-      var results ='<div class="ts-result"><h3 class="title"><a href='+ url + ' class="ts-search-result-link">' + title + '</a></h3><div class="ts-metadata"><span class="ts-snippet">' + body + '</span></div></div>';
-      return results;
+      return '<div class="ts-result"><h3 class="title"><a href='+ url + ' class="ts-search-result-link">' + title + '</a></h3><div class="ts-metadata"><span class="ts-snippet">' + body + '</span></div></div>';
     };
 
   var defaultLoadingFunction = function(query, $resultContainer) {
@@ -642,14 +644,15 @@
     return styles;
   };
   var handleFunctionParam = function(field) {
-    if (field !== undefined) {
-      var evald = field;
-      if (typeof evald === 'function') {
-        evald = evald.call();
-      }
-      return evald;
-    }
-    return undefined;
+    // if (field !== undefined) {
+    //   var evald = field;
+    //   if (typeof evald === 'function') {
+    //     evald = evald.call();
+    //   }
+    //   return evald;
+    // }
+    // return undefined;
+    return typeof field === 'function' ? field() : field;
   };
   // simple client-side LRU Cache, based on https://github.com/rsms/js-lru
 
@@ -739,17 +742,24 @@
     this._keymap = {};
   };
 
-  if (typeof Object.keys === 'function') {
-    LRUCache.prototype.keys = function () {
-      return Object.keys(this._keymap);
-    };
-  } else {
-    LRUCache.prototype.keys = function () {
-      var keys = [];
-      for (var k in this._keymap) keys.push(k);
-      return keys;
-    };
-  }
+  // if (typeof Object.keys === 'function') {
+  //   LRUCache.prototype.keys = function () {
+  //     return Object.keys(this._keymap);
+  //   };
+  // } else {
+  //   LRUCache.prototype.keys = function () {
+  //     var keys = [];
+  //     for (var k in this._keymap) keys.push(k);
+  //     return keys;
+  //   };
+  // }
+  LRUCache.prototype.keys = Object.keys ? function(){
+    return Object.keys( this._keymap );
+  } : function(){
+    var keys = [];
+    for (var k in this._keymap) keys.push(k);
+    return keys;
+  };
   $.fn.tinysouSearch.defaults = {
     attachTo: undefined,
     collection: 'page',
