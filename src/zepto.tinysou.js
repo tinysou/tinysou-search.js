@@ -377,7 +377,7 @@
         var $active = $this.activeResult();
         switch (event.which) {
         case 13:
-          if (($active.length !== 0) && ($list.is(':visible'))) {
+          if (($active.length !== 0) && ($('.autocomplete').css('display') != 'none')) {
             event.preventDefault();
             $this.selectedActCallback($active.data('tinysou-item'))();
           } else if ($this.currentRequest) {
@@ -476,7 +476,6 @@
   }
 
   var callRemote = function ($this, term) {
-    console.log('callRemote');
 
     $this.abortCurrent();
 
@@ -494,7 +493,6 @@
     // params['per_page'] = config.resultLimit;
 
     var endpoint = TinySou.root_url + '/v1/public/autocomplete';
-    // console.log(endpoint);
     $this.currentRequest = $.ajax({
       type: 'GET',
       dataType: 'jsonp',
@@ -531,7 +529,6 @@
   };
   // private helpers
   var processInput = function ($this) {
-      console.log('processInput');
       var term = $this.val();
       if (term === $this.lastValue) {
         return;
@@ -542,10 +539,6 @@
         $this.hideList();
         return;
       }
-      console.log('this');
-      console.log($this);
-
-      console.log($this.data('tinysou-config-autocomplete').engineKey);
       if (typeof $this.data('tinysou-config-autocomplete').engineKey !== 'undefined') {
         getResults($this, term);
       }

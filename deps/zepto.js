@@ -669,7 +669,6 @@ var Zepto = (function() {
       }
     },
     css: function(property, value){
-      console.log(property);
       if (arguments.length < 2) {
         var element = this[0], computedStyle = getComputedStyle(element, '')
         if(!element) return
