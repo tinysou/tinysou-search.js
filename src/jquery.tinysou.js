@@ -253,13 +253,13 @@
             return undefined;
           }
 
-          // params['search_fields'] = handleFunctionParam(config.searchFields);
+          params['search_fields'] = handleFunctionParam(config.searchFields);
           params['fetch_fields'] = handleFunctionParam(config.fetchFields);
-          // params['facets'] = handleFunctionParam(config.facets);
-          // params['filters'] = handleFunctionParam(config.filters);
+          params['facets'] = handleFunctionParam(config.facets);
+          params['filters'] = handleFunctionParam(config.filters);
           params['c'] = handleFunctionParam(config.collection);
-          // params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
-          // params['sort'] = handleFunctionParam(config.sort);
+          params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
+          params['sort'] = handleFunctionParam(config.sort);
           params['spelling'] = handleFunctionParam(config.spelling);
           $.ajax({
             url: TinySou.root_url + "/v1/public/search?callback=?",
@@ -269,8 +269,6 @@
               renderSearchResults(data);
             }
           });
-          // $.ajax(TinySou.root_url + "/v1/public/search?callback=?", params);
-          // .success(renderSearchResults);
         };
 
       $(window).on('hashchange', function () {
@@ -476,8 +474,6 @@
   }
 
   var callRemote = function ($this, term) {
-    console.log('callRemote');
-
     $this.abortCurrent();
 
     var params = {},
@@ -494,7 +490,6 @@
     params['per_page'] = config.resultLimit;
 
     var endpoint = TinySou.root_url + '/v1/public/autocomplete';
-    // console.log(endpoint);
     $this.currentRequest = $.ajax({
       type: 'GET',
       dataType: 'jsonp',
@@ -530,7 +525,6 @@
   };
   // private helpers
   var processInput = function ($this) {
-      console.log('processInput');
       var term = $this.val();
       if (term === $this.lastValue) {
         return;
@@ -541,10 +535,6 @@
         $this.hideList();
         return;
       }
-      console.log('this');
-      console.log($this);
-
-      console.log($this.data('tinysou-config-autocomplete').engineKey);
       if (typeof $this.data('tinysou-config-autocomplete').engineKey !== 'undefined') {
         getResults($this, term);
       }
@@ -611,7 +601,7 @@
 
     if (info) {
       total = info['total'];
-      max_score = info['max_score']
+      max_score = info['max_score'];
       if (info['spelling_suggestion']) {
         spellingSuggestion = info['spelling_suggestion']['text'];
       }
@@ -650,7 +640,7 @@
     var styles = {
       'position': 'absolute',
       'z-index': 9999,
-      'top': offset.top + $attachEl.height() + 1,
+      'top': offset.top + $attachEl.outerHeight() + 1,
       'left': offset.left
     };
 

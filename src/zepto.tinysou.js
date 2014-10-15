@@ -21,6 +21,15 @@
 
 
   var ident = 0;
+  var removeInvalidKey = function(params) {
+    for(var key in params) {
+      if (params[key]) {
+        continue;
+      } else {
+        delete params[key];
+      }
+    }
+  };
 
   window.TinySou = window.TinySou || {};
   TinySou.root_url = TinySou.root_url || 'http://api.tinysou.com';
@@ -253,14 +262,16 @@
             return undefined;
           }
 
-          // params['search_fields'] = handleFunctionParam(config.searchFields);
+          params['search_fields'] = handleFunctionParam(config.searchFields);
           params['fetch_fields'] = handleFunctionParam(config.fetchFields);
-          // params['facets'] = handleFunctionParam(config.facets);
-          // params['filters'] = handleFunctionParam(config.filters);
+          params['facets'] = handleFunctionParam(config.facets);
+          params['filters'] = handleFunctionParam(config.filters);
           params['c'] = handleFunctionParam(config.collection);
-          // params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
-          // params['sort'] = handleFunctionParam(config.sort);
+          params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
+          params['sort'] = handleFunctionParam(config.sort);
           params['spelling'] = handleFunctionParam(config.spelling);
+          removeInvalidKey(params);
+
           $.ajax({
             url: TinySou.root_url + "/v1/public/search?callback=?",
             data: params,
@@ -269,8 +280,6 @@
               renderSearchResults(data);
             }
           });
-          // $.ajax(TinySou.root_url + "/v1/public/search?callback=?", params);
-          // .success(renderSearchResults);
         };
 
       $(window).on('hashchange', function () {
@@ -484,14 +493,14 @@
 
     params['q'] = term;
     params['engine_key'] = config.engineKey;
-    // params['search_fields'] = handleFunctionParam(config.searchFields);
+    params['search_fields'] = handleFunctionParam(config.searchFields);
     params['fetch_fields'] = handleFunctionParam(config.fetchFields);
-    // params['filters'] = handleFunctionParam(config.filters);
+    params['filters'] = handleFunctionParam(config.filters);
     params['c'] = handleFunctionParam(config.collection);
-    // params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
-    // params['sort'] = handleFunctionParam(config.sort);
-    // params['per_page'] = config.resultLimit;
-
+    params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
+    params['sort'] = handleFunctionParam(config.sort);
+    params['per_page'] = config.resultLimit;
+    removeInvalidKey(params);
     var endpoint = TinySou.root_url + '/v1/public/autocomplete';
     $this.currentRequest = $.ajax({
       type: 'GET',
