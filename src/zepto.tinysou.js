@@ -485,13 +485,13 @@
 
     params['q'] = term;
     params['engine_key'] = config.engineKey;
-    params['search_fields'] = handleFunctionParam(config.searchFields);
+    // params['search_fields'] = handleFunctionParam(config.searchFields);
     params['fetch_fields'] = handleFunctionParam(config.fetchFields);
-    params['filters'] = handleFunctionParam(config.filters);
+    // params['filters'] = handleFunctionParam(config.filters);
     params['c'] = handleFunctionParam(config.collection);
-    params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
-    params['sort'] = handleFunctionParam(config.sort);
-    params['per_page'] = config.resultLimit;
+    // params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
+    // params['sort'] = handleFunctionParam(config.sort);
+    // params['per_page'] = config.resultLimit;
 
     var endpoint = TinySou.root_url + '/v1/public/autocomplete';
     // console.log(endpoint);
@@ -499,18 +499,19 @@
       type: 'GET',
       dataType: 'jsonp',
       url: endpoint,
-      data: params
-    }).success(function(data) {
-      var norm = normalize(term);
-      if (data.info.total > 0) {
-        $this.cache.put(norm, data.records);
-      } else {
-        $this.addEmpty(norm);
-        $this.data('tinysou-list').empty();
-        $this.hideList();
-        return;
+      data: params,
+      success: function(data) {
+        var norm = normalize(term);
+        if (data.info.total > 0) {
+          $this.cache.put(norm, data.records);
+        } else {
+          $this.addEmpty(norm);
+          $this.data('tinysou-list').empty();
+          $this.hideList();
+          return;
+        }
+        processData($this, data.records, term);
       }
-      processData($this, data.records, term);
     });
   };
 
