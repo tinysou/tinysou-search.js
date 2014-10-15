@@ -9,16 +9,16 @@ module.exports = function(grunt) {
         }
       },
       all: {
-        src: [ 'deps/jquery-2.1.1.js', 'deps/jquery.hashchange.js', 'deps/jquery.modal.js', 'src/jquery.tinysou.js'],
-        dest: 'build/tinysou-all.js'
+        src: [ 'deps/jquery-2.1.1.js', 'deps/jquery.modal.js', 'src/jquery.tinysou.js'],
+        dest: 'build/jquery.tinysou.js'
       },
       nojquery: {
-        src: ['deps/jquery.hashchange.js', 'deps/jquery.modal.js', 'src/jquery.tinysou.js',],
+        src: ['deps/jquery.modal.js', 'src/jquery.tinysou.js',],
         dest: 'build/tinysou-nojquery.js'
       },
-      bare: {
-        src: 'src/jquery.tinysou.js',
-        dest: 'build/jquery.tinysou.min.js'
+      zepto: {
+        src: [ 'deps/zepto.js', 'deps/zepto.data.js', 'deps/zepto.modal.js', 'src/zepto.tinysou.js'],
+        dest: 'build/zepto.tinysou.js'
       }
     },
     cssmin: {
