@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>custom</title>
+    <link rel="stylesheet" href="src/tinysou.css" >
+    <script src='deps/zepto.js'></script>
+    <script src='deps/zepto.modal.js'></script>
+    <script src='src/zepto.tinysou.js'></script>
+
+    <script type="text/javascript">
+      var option = {
+        engineKey: '97eaafba26b04d3cdeb9',
+        perPage: 5,
+        resultLimit: 5
+      };
+      $(document).ready(function(){
+        $('#search-input').tinysouSearch(option);
+      })
+    </script>
+</head>
+<body>
+    <form>
+        <input type="text" name="" value="" placeholder="" id="search-input">
+    </form>
+    <div class="ts-results-container">
+    </div>
+</body>
+</html>
