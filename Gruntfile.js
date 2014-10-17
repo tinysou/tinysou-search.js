@@ -8,17 +8,21 @@ module.exports = function(grunt) {
           drop_console: true
         }
       },
-      all: {
-        src: [ 'deps/jquery-2.1.1.js', 'deps/jquery.modal.js', 'src/jquery.tinysou.js'],
+      jquery: {
+        src: ['deps/jquery.js', 'deps/jquery.modal.js', 'src/jquery.tinysou.js'],
         dest: 'build/jquery.tinysou.js'
       },
       nojquery: {
-        src: ['deps/jquery.modal.js', 'src/jquery.tinysou.js',],
-        dest: 'build/tinysou-nojquery.js'
+        src: ['deps/jquery.modal.js', 'src/jquery.tinysou.js'],
+        dest: 'build/nojquery.tinysou.js'
       },
       zepto: {
-        src: [ 'deps/zepto.js', 'deps/zepto.data.js', 'deps/zepto.modal.js', 'src/zepto.tinysou.js'],
+        src: ['deps/zepto.js', 'deps/zepto.data.js', 'deps/zepto.modal.js', 'src/zepto.tinysou.js'],
         dest: 'build/zepto.tinysou.js'
+      },
+      nozepto: {
+        src: ['deps/zepto.data.js', 'deps/zepto.modal.js', 'src/zepto.tinysou.js'],
+        dest: 'build/nozepto.tinysou.js'
       }
     },
     cssmin: {
