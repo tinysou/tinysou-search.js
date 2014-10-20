@@ -204,12 +204,11 @@
       };
 
       var $resultContainer;
-
       if (config.renderStyle == 'inline') {
         $resultContainer = $(config.resultContainingElement);
       } else if (config.renderStyle == 'new_page') {
         $resultContainer = $(config.resultContainingElement);
-        var url = window.location.toString().split('#')[0];
+        var url = window.location.pathname;
         if (url == config.resultPageURL) {
           config.renderStyle = 'inline';
         }
@@ -570,8 +569,6 @@
     } else if (config.renderStyle == 'new_page') {
       var url = config.resultPageURL + window.location.hash;
       window.location.replace(url);
-      config.renderStyle = 'inline';
-      config.resultContainingElement = '#ts-results-container';
     }
   };
 
