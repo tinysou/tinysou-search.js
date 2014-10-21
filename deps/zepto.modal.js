@@ -1,7 +1,3 @@
-/*
-    A simple jQuery modal (http://github.com/kylefox/jquery-modal)
-    Version 0.5.5
-*/
 (function($) {
 
   var current = null;

@@ -5,6 +5,8 @@
   "description": "tinysou",
   "license": "MIT",
   "devDependencies": {
+    "jquery": "latest",
+    "zepto": "madrobby/zepto",
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.3",
     "grunt-contrib-uglify": "~0.2.1",
