@@ -21,6 +21,15 @@
 
 
   var ident = 0;
+  var removeInvalidKey = function(params) {
+    for(var key in params) {
+      if (params[key]) {
+        continue;
+      } else {
+        delete params[key];
+      }
+    }
+  };
 
   window.TinySou = window.TinySou || {};
   TinySou.root_url = TinySou.root_url || 'http://api.tinysou.com';
@@ -65,16 +74,14 @@
     if (!sectionText) { return; }
 
     function normalizeText(str) {
-      // var out = str.replace(/\s+/g, '');
-      // out = out.toLowerCase();
-      // return out;
-      return str.replace(/\s+/g, '').toLowerCase();
+      var out = str.replace(/\s+/g, '');
+      out = out.toLowerCase();
+      return out;
     }
 
     sectionText = normalizeText(sectionText);
 
     $('h1, h2, h3, h4, h5, h6').each(function(idx) {
-      // no 'var'
       $this = $(this);
       if (normalizeText($this.text()).indexOf(sectionText) >= 0) {
         this.scrollIntoView(true);
@@ -161,7 +168,7 @@
       };
 
       $this.activeResult = function() {
-        return $this.listResults().filter('.' + config.activeItemClass).eq(0);
+        return $this.listResults().filter('.' + config.activeItemClass).first();
       };
 
       $this.prevResult = function() {
@@ -204,11 +211,12 @@
       };
 
       var $resultContainer;
+
       if (config.renderStyle == 'inline') {
         $resultContainer = $(config.resultContainingElement);
       } else if (config.renderStyle == 'new_page') {
         $resultContainer = $(config.resultContainingElement);
-        var url = window.location.pathname;
+        var url = window.location.toString().split('#')[0];
         if (url == config.resultPageURL) {
           config.renderStyle = 'inline';
         }
@@ -244,15 +252,14 @@
           params['per_page'] = config.perPage;
 
           function handleFunctionParam(field) {
-            // if (field !== undefined) {
-            //   var evald = field;
-            //   if (typeof evald === 'function') {
-            //     evald = evald.call();
-            //   }
-            //   return evald;
-            // }
-            // return undefined;
-            return typeof field === 'function' ? field() : field;
+            if (field !== undefined) {
+              var evald = field;
+              if (typeof evald === 'function') {
+                evald = evald.call();
+              }
+              return evald;
+            }
+            return undefined;
           }
 
           params['search_fields'] = handleFunctionParam(config.searchFields);
@@ -263,8 +270,18 @@
           params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
           params['sort'] = handleFunctionParam(config.sort);
           params['spelling'] = handleFunctionParam(config.spelling);
-          $.getJSON(TinySou.root_url + "/v1/public/search?callback=?", params).success(renderSearchResults);
+          removeInvalidKey(params);
+
+          $.ajax({
+            url: TinySou.root_url + "/v1/public/search?callback=?",
+            data: params,
+            dataType: 'jsonp',
+            success: function(data) {
+              renderSearchResults(data);
+            }
+          });
         };
+
       $(window).on('hashchange', function () {
         var params = $.hashParams();
         if (params.tsq) {
@@ -293,7 +310,9 @@
         e.preventDefault();
         var $this = $(this);
         setSearchHash($.hashParams().tsq, $this.data('page'));
-      }).on('click', '[data-hash][data-spelling-suggestion]', function (e) {
+      });
+
+      $(document).on('click', '[data-hash][data-spelling-suggestion]', function (e) {
         e.preventDefault();
         var $this = $(this);
         setSearchHash($this.data('spelling-suggestion'), 0);
@@ -367,7 +386,7 @@
         var $active = $this.activeResult();
         switch (event.which) {
         case 13:
-          if (($active.length !== 0) && ($list.is(':visible'))) {
+          if (($active.length !== 0) && ($('.autocomplete').css('display') != 'none')) {
             event.preventDefault();
             $this.selectedActCallback($active.data('tinysou-item'))();
           } else if ($this.currentRequest) {
@@ -379,7 +398,7 @@
         case 38:
           event.preventDefault();
           if ($active.length === 0) {
-            $this.listResults().eq(-1).addClass(config.activeItemClass);
+            $this.listResults().last().addClass(config.activeItemClass);
           } else {
             $this.prevResult();
           }
@@ -387,8 +406,8 @@
         case 40:
           event.preventDefault();
           if ($active.length === 0) {
-            $this.listResults().eq(0).addClass(config.activeItemClass);
-          } else if ($active != $this.listResults().eq(-1)) {
+            $this.listResults().first().addClass(config.activeItemClass);
+          } else if ($active != $this.listResults().last()) {
             $this.nextResult();
           }
           break;
@@ -403,9 +422,6 @@
       });
 
       // opera wants keypress rather than keydown to prevent the form submit
-      // so bind keypress event for opera-only should be better(?)
-      // http://browserhacks.com/#op
-      // (!!window.opera || /opera|opr/i.test(navigator.userAgent)) &&
       $this.keypress(function (event) {
         if ((event.which == 13) && ($this.activeResult().length > 0)) {
           event.preventDefault();
@@ -416,7 +432,8 @@
       var blurWait = false;
       $(document).bind('mousedown.tinysou' + ++ident, function () {
         mouseDown = true;
-      }).bind('mouseup.tinysou' + ident, function () {
+      });
+      $(document).bind('mouseup.tinysou' + ident, function () {
         mouseDown = false;
         if (blurWait) {
           blurWait = false;
@@ -468,6 +485,7 @@
   }
 
   var callRemote = function ($this, term) {
+
     $this.abortCurrent();
 
     var params = {},
@@ -482,24 +500,25 @@
     params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
     params['sort'] = handleFunctionParam(config.sort);
     params['per_page'] = config.resultLimit;
-
+    removeInvalidKey(params);
     var endpoint = TinySou.root_url + '/v1/public/autocomplete';
     $this.currentRequest = $.ajax({
       type: 'GET',
       dataType: 'jsonp',
       url: endpoint,
-      data: params
-    }).success(function(data) {
-      var norm = normalize(term);
-      if (data.info.total > 0) {
-        $this.cache.put(norm, data.records);
-      } else {
-        $this.addEmpty(norm);
-        $this.data('tinysou-list').empty();
-        $this.hideList();
-        return;
+      data: params,
+      success: function(data) {
+        var norm = normalize(term);
+        if (data.info.total > 0) {
+          $this.cache.put(norm, data.records);
+        } else {
+          $this.addEmpty(norm);
+          $this.data('tinysou-list').empty();
+          $this.hideList();
+          return;
+        }
+        processData($this, data.records, term);
       }
-      processData($this, data.records, term);
     });
   };
 
@@ -524,7 +543,7 @@
         return;
       }
       $this.lastValue = term;
-      if (!$.trim(term)) {
+      if ($.trim(term) === '') {
         $this.data('tinysou-list').empty();
         $this.hideList();
         return;
@@ -565,10 +584,13 @@
 
     renderPagination(ctx, data.info);
     if (!config.renderStyle) {
-      $('#ts-results-container').appendTo('body').ts_modal({zIndex: 9999});
+      $('#ts-results-container').appendTo('body');
+      $.ts_modal('#ts-results-container', {zIndex: 9999});
     } else if (config.renderStyle == 'new_page') {
       var url = config.resultPageURL + window.location.hash;
       window.location.replace(url);
+      config.renderStyle = 'inline';
+      config.resultContainingElement = '#ts-results-container';
     }
   };
 
@@ -576,7 +598,8 @@
       var title = item['document']['title'];
       var url = item['document']['url'];
       var body = (item.highlight && item.highlight['body']) || item['document']['sections'].join(',');
-      return '<div class="ts-result"><h3 class="title"><a href='+ url + ' class="ts-search-result-link">' + title + '</a></h3><div class="ts-metadata"><span class="ts-snippet">' + TinySou.htmlEscape(body) + '</span></div></div>';
+      var results ='<div class="ts-result"><h3 class="title"><a href='+ url + ' class="ts-search-result-link">' + title + '</a></h3><div class="ts-metadata"><span class="ts-snippet">' + TinySou.htmlEscape(body) + '</span></div></div>';
+      return results;
     };
 
   var defaultLoadingFunction = function(query, $resultContainer) {
@@ -592,7 +615,7 @@
 
     if (info) {
       total = info['total'];
-      max_score = info['max_score'];
+      max_score = info['max_score']
       if (info['spelling_suggestion']) {
         spellingSuggestion = info['spelling_suggestion']['text'];
       }
@@ -631,25 +654,24 @@
     var styles = {
       'position': 'absolute',
       'z-index': 9999,
-      'top': offset.top + $attachEl.outerHeight() + 1,
+      'top': offset.top + $attachEl.height() + 1,
       'left': offset.left
     };
 
     if (config.setWidth) {
-      styles['width'] = $attachEl.outerWidth() - 2;
+      styles['width'] = $attachEl.width() - 2;
     }
     return styles;
   };
   var handleFunctionParam = function(field) {
-    // if (field !== undefined) {
-    //   var evald = field;
-    //   if (typeof evald === 'function') {
-    //     evald = evald.call();
-    //   }
-    //   return evald;
-    // }
-    // return undefined;
-    return typeof field === 'function' ? field() : field;
+    if (field !== undefined) {
+      var evald = field;
+      if (typeof evald === 'function') {
+        evald = evald.call();
+      }
+      return evald;
+    }
+    return undefined;
   };
   // simple client-side LRU Cache, based on https://github.com/rsms/js-lru
 
@@ -739,24 +761,17 @@
     this._keymap = {};
   };
 
-  // if (typeof Object.keys === 'function') {
-  //   LRUCache.prototype.keys = function () {
-  //     return Object.keys(this._keymap);
-  //   };
-  // } else {
-  //   LRUCache.prototype.keys = function () {
-  //     var keys = [];
-  //     for (var k in this._keymap) keys.push(k);
-  //     return keys;
-  //   };
-  // }
-  LRUCache.prototype.keys = Object.keys ? function(){
-    return Object.keys( this._keymap );
-  } : function(){
-    var keys = [];
-    for (var k in this._keymap) keys.push(k);
-    return keys;
-  };
+  if (typeof Object.keys === 'function') {
+    LRUCache.prototype.keys = function () {
+      return Object.keys(this._keymap);
+    };
+  } else {
+    LRUCache.prototype.keys = function () {
+      var keys = [];
+      for (var k in this._keymap) keys.push(k);
+      return keys;
+    };
+  }
   $.fn.tinysouSearch.defaults = {
     attachTo: undefined,
     collection: 'page',
@@ -793,4 +808,4 @@
     disableAutocomplete: false,
     autocompleteContainingElement: 'body'
   };
-})(jQuery);
+})(Zepto);
