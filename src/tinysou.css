@@ -56,6 +56,7 @@ div.ts-result.final {
 
 div.ts-result .ts-snippet {
   color: #333;
+  line-height: 1.5;
 }
 
 div.ts-result .ts-date {
