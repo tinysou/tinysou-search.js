@@ -23,16 +23,12 @@ module.exports = function(grunt) {
       nozepto: {
         src: ['node_modules/zepto/src/data.js', 'deps/zepto.modal.js', 'src/zepto.tinysou.js'],
         dest: 'build/nozepto.tinysou.js'
-      },
-      bare: {
-        src: 'src/jquery.tinysou.js',
-        dest: 'build/jquery.tinysou.min.js'
       }
     },
     cssmin: {
       css: {
         src: 'src/tinysou.css',
-        dest:'build/tinysou.min.css'
+        dest:'build/tinysou.css'
       }
     }
   });

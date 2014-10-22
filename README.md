@@ -4,10 +4,8 @@ The official TinySou search plugin for adding search functionality backed by dat
 
 Requirements
 ---------
-* [hogan](https://github.com/twitter/hogan.js)
 * [jquery](https://github.com/jquery/jquery)
 * [jquery-modal](https://github.com/kylefox/jquery-modal)
-* [jquery-hashchange.js](https://github.com/cowboy/jquery-hashchange)
 
 Directory
 ---------
