@@ -10,27 +10,30 @@ Requirements
 Directory
 ---------
 * build/
-* src/ 
+* src/
 * package.json
 * Gruntfile.js
 
 Building TinySou
 ---------
 
-To install dependent libraries, run
+To install dependent libraries, run:
 
 ~~~ sh
 $ npm install
+~~~
 
-To build files, run
+To build files, run:
 
 ~~~ sh
 $ grunt
+~~~
 
-To watch files and build, run
+To watch files and build, run:
 
 ~~~ sh
 $ grunt watch
+~~~
 
 License
 ---------
