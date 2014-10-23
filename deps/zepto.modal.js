@@ -184,6 +184,9 @@
     return $(el);
   };
 
+  // add window resize event
+  $(window).on('resize', $._ts_modal.resize)
+
   // Automatically bind links with rel="modal:close" to, well, close the modal.
   $(document).on('click.ts_modal', 'a[rel="ts_modal:close"]', $._ts_modal.close);
   $(document).on('click.ts_modal', 'a[rel="ts_modal:open"]', function(event) {

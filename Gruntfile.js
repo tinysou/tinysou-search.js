@@ -25,6 +25,16 @@ module.exports = function(grunt) {
         dest: 'build/nozepto.tinysou.js'
       }
     },
+    watch: {
+      js: {
+        files: ['deps/*.js', 'src/*.js'],
+        tasks: ['uglify']
+      },
+      css: {
+        files: ['src/*.css'],
+        tasks: ['cssmin']
+      }
+    },
     cssmin: {
       css: {
         src: 'src/tinysou.css',
@@ -35,6 +45,7 @@ module.exports = function(grunt) {
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-css');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   // Default task(s).
-  grunt.registerTask('default', ['uglify', 'cssmin']);
+  grunt.registerTask('default', ['watch']);
 };
