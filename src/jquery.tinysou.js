@@ -760,10 +760,9 @@
   $.fn.tinysouSearch.defaults = {
     attachTo: undefined,
     collection: 'page',
-    // filters: undefined,
+    filters: undefined,
     engineKey: undefined,
     searchFields: undefined,
-    functionalBoosts: undefined,
     sort: undefined,
     fetchFields: ['title', 'url', 'sections'],
     renderStyle: undefined,
@@ -775,7 +774,6 @@
     renderResultsFunction: defaultRenderResultsFunction,
     renderFunction: defaultRenderFunction,
     perPage: 10,
-    spelling: 'strict',
     //autocomplete
     activeItemClass: 'active',
     noResultsClass: 'noResults',
