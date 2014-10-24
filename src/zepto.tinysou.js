@@ -603,18 +603,6 @@
       $resultContainer.html('<p class="ts-loading-message">loading...</p>');
     };
 
-  var defaultPostRenderFunction = function(data) {
-    var info = data.info;
-    var total = 0;
-    var max_score = 0.0;
-    var $resultContainer = this.getContext().resultContainer;
-
-    if (info) {
-      total = info['total'];
-      max_score = info['max_score']
-    }
-  };
-
   var defaultRenderActResultsFunction = function(ctx, results) {
     var $list = ctx.list,
       config = ctx.config;
@@ -769,7 +757,7 @@
     resultPageURL: undefined,
     resultContainingElement: undefined,
     preRenderFunction: undefined,
-    postRenderFunction: defaultPostRenderFunction,
+    postRenderFunction: undefined,
     loadingFunction: defaultLoadingFunction,
     renderResultsFunction: defaultRenderResultsFunction,
     renderFunction: defaultRenderFunction,
