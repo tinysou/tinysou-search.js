@@ -1,9 +1,17 @@
 {
-  "name": "tinysou",
-  "file": "tinysou",
-  "version": "0.1.0",
-  "description": "tinysou",
+  "name": "tinysouJS",
+  "version": "0.0.1",
+  "description": "Tinysou js client",
+  "homepage": "https://github.com/tinysou/tinysou-search.js",
+  "author": "tinysou",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tinysou/tinysou-search.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tinysou/tinysou-search.js/issues"
+  },
   "devDependencies": {
     "jquery": "latest",
     "zepto": "madrobby/zepto",

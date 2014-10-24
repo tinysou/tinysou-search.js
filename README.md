@@ -10,18 +10,31 @@ Requirements
 Directory
 ---------
 * build/
-
-* src/ 	
-Contains the Required third part libraries and TinySou libraries
+* src/
 * package.json
 * Gruntfile.js
 
 Building TinySou
 ---------
-Once you have your environment setup, just run:
 
-	grunt 
-	
+To install dependent libraries, run:
+
+~~~ sh
+$ npm install
+~~~
+
+To build files, run:
+
+~~~ sh
+$ grunt
+~~~
+
+To watch files and build, run:
+
+~~~ sh
+$ grunt watch
+~~~
+
 License
 ---------
 TinySou Search is distributed under the MIT License:

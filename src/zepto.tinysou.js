@@ -267,9 +267,7 @@
           params['facets'] = handleFunctionParam(config.facets);
           params['filters'] = handleFunctionParam(config.filters);
           params['c'] = handleFunctionParam(config.collection);
-          params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
           params['sort'] = handleFunctionParam(config.sort);
-          params['spelling'] = handleFunctionParam(config.spelling);
           removeInvalidKey(params);
 
           $.ajax({
@@ -497,7 +495,6 @@
     params['fetch_fields'] = handleFunctionParam(config.fetchFields);
     params['filters'] = handleFunctionParam(config.filters);
     params['c'] = handleFunctionParam(config.collection);
-    params['functional_boosts'] = handleFunctionParam(config.functionalBoosts);
     params['sort'] = handleFunctionParam(config.sort);
     params['per_page'] = config.resultLimit;
     removeInvalidKey(params);
@@ -611,22 +608,10 @@
     var total = 0;
     var max_score = 0.0;
     var $resultContainer = this.getContext().resultContainer;
-    var spellingSuggestion = null;
 
     if (info) {
       total = info['total'];
       max_score = info['max_score']
-      if (info['spelling_suggestion']) {
-        spellingSuggestion = info['spelling_suggestion']['text'];
-      }
-    }
-
-    if (total === 0) {
-      $resultContainer.html("<div id='ts-no-results' class='ts-no-results'>没有找到结果.</div>");
-    }
-
-    if (spellingSuggestion !== null) {
-      $resultContainer.append('<div class="ts-spelling-suggestion">你是不是在找 <a href="#" data-hash="true" data-spelling-suggestion="' + spellingSuggestion + '">' + spellingSuggestion + '</a>?</div>');
     }
   };
 
@@ -775,10 +760,9 @@
   $.fn.tinysouSearch.defaults = {
     attachTo: undefined,
     collection: 'page',
-    // filters: undefined,
+    filters: undefined,
     engineKey: undefined,
     searchFields: undefined,
-    functionalBoosts: undefined,
     sort: undefined,
     fetchFields: ['title', 'url', 'sections'],
     renderStyle: undefined,
@@ -790,7 +774,6 @@
     renderResultsFunction: defaultRenderResultsFunction,
     renderFunction: defaultRenderFunction,
     perPage: 10,
-    spelling: 'strict',
     //autocomplete
     activeItemClass: 'active',
     noResultsClass: 'noResults',
