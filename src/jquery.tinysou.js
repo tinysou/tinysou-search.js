@@ -442,8 +442,8 @@
   var renderPagination = function (ctx, resultInfo) {
     var pages = '<div class="ts-page">',
         previousPage, nextPage, currentPage, totalPages;
-    currentPage = resultInfo['page'];
-    totalPages = ((resultInfo['total'] - 1) / ctx.config.perPage);
+    currentPage = resultInfo['current_page'];
+    totalPages = resultInfo['total_pages'];
     if (currentPage != 0) {
       previousPage = currentPage - 1;
       pages = pages + '<a href="#" class="ts-prev" data-hash="true" data-page="' + previousPage + '">&laquo; 上一页</a>';
