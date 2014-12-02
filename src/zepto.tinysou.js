@@ -32,7 +32,7 @@
   };
 
   window.TinySou = window.TinySou || {};
-  TinySou.root_url = TinySou.root_url || 'http://api.tinysou.com';
+  TinySou.root_url = TinySou.root_url || '//api.tinysou.com';
 
   // Functions used to track result click event
   TinySou.pingUrl = function(endpoint, callback) {
