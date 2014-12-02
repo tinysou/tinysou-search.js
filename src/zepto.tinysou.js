@@ -235,7 +235,7 @@
 
       var submitSearch = function (query, options) {
           options = $.extend({
-            page: 0
+            page: 1
           }, options);
           var params = {};
 
@@ -300,7 +300,7 @@
         $containingForm.bind('submit', function (e) {
           e.preventDefault();
           var searchQuery = $this.val();
-          setSearchHash(searchQuery, 0);
+          setSearchHash(searchQuery, 1);
         });
       }
 
@@ -313,7 +313,7 @@
       $(document).on('click', '[data-hash][data-spelling-suggestion]', function (e) {
         e.preventDefault();
         var $this = $(this);
-        setSearchHash($this.data('spelling-suggestion'), 0);
+        setSearchHash($this.data('spelling-suggestion'), 1);
       });
 
       var renderSearchResults = function (data) {
