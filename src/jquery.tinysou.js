@@ -227,7 +227,7 @@
 
       var submitSearch = function (query, options) {
           options = $.extend({
-            page: 0
+            page: 1
           }, options);
           var params = {};
 
@@ -283,7 +283,7 @@
         $containingForm.bind('submit', function (e) {
           e.preventDefault();
           var searchQuery = $this.val();
-          setSearchHash(searchQuery, 0);
+          setSearchHash(searchQuery, 1);
         });
       }
 
@@ -294,7 +294,7 @@
       }).on('click', '[data-hash][data-spelling-suggestion]', function (e) {
         e.preventDefault();
         var $this = $(this);
-        setSearchHash($this.data('spelling-suggestion'), 0);
+        setSearchHash($this.data('spelling-suggestion'), 1);
       });
 
       var renderSearchResults = function (data) {
@@ -444,7 +444,7 @@
         previousPage, nextPage, currentPage, totalPages;
     currentPage = resultInfo['current_page'];
     totalPages = resultInfo['total_pages'];
-    if (currentPage != 0) {
+    if (currentPage != 1) {
       previousPage = currentPage - 1;
       pages = pages + '<a href="#" class="ts-prev" data-hash="true" data-page="' + previousPage + '">&laquo; 上一页</a>';
     }
