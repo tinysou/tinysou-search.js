@@ -452,7 +452,7 @@
       nextPage = currentPage + 1;
       pages = pages + '<a href="#" class="ts-next" data-hash="true" data-page="' + nextPage + '">下一页 &raquo;</a>';
     }
-    pages += '<a href="http://tinysou.com" class="ts-meta ts-small">TinySou</a></div>';
+    pages += '<a href="http://tinysou.com" class="ts-position-right ts-small">TinySou</a></div>';
     if (currentPage <= 1 && currentPage >= totalPages) {
       pages = '<div class="ts-page ts-right"><a href="http://tinysou.com" class="ts-small">TinySou</a></div></div>';
     }
