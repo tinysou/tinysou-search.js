@@ -469,7 +469,10 @@
       nextPage = currentPage + 1;
       pages = pages + '<a href="#" class="ts-next" data-hash="true" data-page="' + nextPage + '">下一页 &raquo;</a>';
     }
-    pages += '</div>';
+    pages += '<span class="ts-position-right ts-small">Powered by <a href="http://tinysou.com">@tinysou</a></span></div>';
+    if (currentPage <= 1 && currentPage >= totalPages) {
+      pages = '<div class="ts-page ts-right ts-small">Powered by <a href="http://tinysou.com">@tinysou</a></div></div>';
+    }
     $(pages).appendTo(ctx.resultContainer);
   };
 

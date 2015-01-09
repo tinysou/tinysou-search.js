@@ -73,6 +73,32 @@ div.ts-result .ts-date {
   margin-right: 20px;
 }
 
+.ts-page {
+  position: relative;
+}
+
+.ts-position-right {
+  position: absolute;
+  right: 0;
+}
+
+.ts-right {
+  text-align: right;
+}
+
+.ts-small {
+  color: #888;
+  font-size: 14px;
+}
+
+.ts-small a {
+  color: #444;
+}
+
+.ts-small a:hover {
+  color: #000;
+}
+
 .ts-loading-message {
   font-size: 16px;
   font-style: italic;
