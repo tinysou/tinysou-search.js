@@ -87,12 +87,15 @@ div.ts-result .ts-date {
 }
 
 .ts-small {
-  text-decoration: none;
-  color: #777;
+  color: #888;
   font-size: 14px;
 }
 
-.ts-small:hover {
+.ts-small a {
+  color: #444;
+}
+
+.ts-small a:hover {
   color: #000;
 }
 
